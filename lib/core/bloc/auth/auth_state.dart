@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:gbk_tour/core/error/auth_error.dart';
+import 'package:gbk_tour/data/models/login/login_res_model.dart';
 
 @immutable
 abstract class AuthState {
@@ -13,18 +14,20 @@ abstract class AuthState {
 class AuthNavigationState extends AuthState {
   final bool? isEmail;
   final String? value;
-  const AuthNavigationState({required super.index, required super.isloading,this.isEmail,this.value});
+  final String? code;
+  const AuthNavigationState(
+      {required super.index,
+      required super.isloading,
+      this.isEmail,
+      this.value,
+      this.code});
 }
 
 @immutable
 class AuthLoginState extends AuthState {
-  final String email;
-  final String password;
+  final LoginResModel response;
   const AuthLoginState(
-      {required super.index,
-      required super.isloading,
-      required this.email,
-      required this.password});
+      {required super.index, required super.isloading, required this.response});
 }
 
 @immutable
@@ -34,6 +37,11 @@ class AuthStateLogOut extends AuthState {
   @override
   String toString() =>
       'AppStateLogOut isLoading = $isloading, AuthError = $error';
+}
+
+@immutable
+class AuthRegisterState extends AuthState {
+  const AuthRegisterState({required super.index, required super.isloading});
 }
 
 // @immutable
@@ -64,6 +72,17 @@ extension ForgetValue on AuthState {
     final state = this;
     if (state is AuthNavigationState) {
       return state.value;
+    } else {
+      return null;
+    }
+  }
+}
+
+extension OtpCode on AuthState {
+  String? get getOtp {
+    final cls = this;
+    if (cls is AuthNavigationState) {
+      return cls.code;
     } else {
       return null;
     }

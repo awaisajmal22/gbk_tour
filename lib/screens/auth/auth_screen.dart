@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gbk_tour/core/blocs/auth/auth_bloc.dart';
-import 'package:gbk_tour/core/blocs/auth/auth_state.dart';
+import 'package:gbk_tour/core/bloc/auth/auth_bloc.dart';
+import 'package:gbk_tour/core/bloc/auth/auth_state.dart';
+
 import 'package:gbk_tour/screens/auth/component/change_password_form.dart';
 import 'package:gbk_tour/screens/auth/component/forget_password_screen.dart';
 import 'package:gbk_tour/screens/auth/component/login_form.dart';
 import 'package:gbk_tour/screens/auth/component/otp_success_form.dart';
 import 'package:gbk_tour/screens/auth/component/otp_verification_form.dart';
-import 'package:gbk_tour/screens/auth/component/resgister_form.dart';
+import 'package:gbk_tour/screens/auth/component/register_form.dart';
 import 'package:gbk_tour/utils/dialog/auth_error_dialog.dart';
 import 'package:gbk_tour/utils/loader/loading.dart';
 

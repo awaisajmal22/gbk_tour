@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart' hide Headers;
 
-
 class ServerError implements Exception {
   int _errorCode = 0;
   String _errorMessage = "";
@@ -19,7 +18,11 @@ class ServerError implements Exception {
   }
 
   getErrorMessage() {
-    return _errorMessage;
+    if (_error.response!.data is List) {
+      return _error.response!.data['errors'][0];
+    } else {
+      return _error.response!.data['errors'].toString();
+    }
   }
 
   _handleError(error) {

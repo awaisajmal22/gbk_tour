@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gbk_tour/core/blocs/splash/splash_event.dart';
-import 'package:gbk_tour/core/blocs/splash/splash_state.dart';
+import 'package:gbk_tour/core/bloc/splash/splash_event.dart';
+import 'package:gbk_tour/core/bloc/splash/splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState>{
   SplashBloc() : super(InitialState()){

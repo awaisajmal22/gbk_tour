@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gbk_tour/config/extensions/size_extension.dart';
 import 'package:gbk_tour/config/router/routes.dart';
-import '../../gen/assets.gen.dart';
-import '../../core/blocs/splash/splash_bloc.dart';
-import '../../core/blocs/splash/splash_state.dart';
+import 'package:gbk_tour/gen/assets.gen.dart';
+
+import '../../core/bloc/splash/splash_bloc.dart';
+import '../../core/bloc/splash/splash_state.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

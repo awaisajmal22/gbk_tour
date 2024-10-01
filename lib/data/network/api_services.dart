@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart' as DIO;
 import 'package:flutter/material.dart';
+import 'package:gbk_tour/core/constant/constant.dart';
 import 'package:gbk_tour/utils/toast.dart';
 
 import '../network/server_error.dart';
-
-
 
 class API {
   // CheckConnectivityServices connectivityServices = CheckConnectivityServices();
@@ -22,7 +21,9 @@ class API {
         apiurl,
         options: DIO.Options(
             receiveTimeout: Duration(milliseconds: 30000),
-            headers: {'accept': '*/*', 'x-secret': 'MonrooHeaders'}),
+            headers: {
+              'accept': '*/*',
+            }),
       )
           .whenComplete(() {
         debugPrint("Getting Process is Complete:");
@@ -57,7 +58,10 @@ class API {
   }
 
   Future getRequestHeader(
-      BuildContext context, String apiurl, String authToken) async {
+    BuildContext context,
+    String apiurl,
+    String token,
+  ) async {
     // if (await connectivityServices.onConnectivity()) {
     try {
       print("apiurl $apiurl");
@@ -67,15 +71,13 @@ class API {
         apiurl,
         options: DIO.Options(headers: {
           'accept': 'application/json',
-          'x-secret': 'MonrooHeaders',
-          // "Authorization": "Bearer ${token.toString()}",
+          "Authorization": token,
         }),
       )
           .whenComplete(() {
         debugPrint("Getting Process is Complete:");
       }).catchError((onError) {
         debugPrint("GET Error: ${onError.toString()}");
-        if (onError.toString().contains("401")) {}
       });
       return response;
     } catch (error) {
@@ -87,6 +89,14 @@ class API {
           print(ServerError.withError(error: error).getErrorCode());
 
           if (ServerError.withError(error: error).getErrorCode() == 401) {
+            toast(
+                msg: ServerError.withError(error: error).getErrorMessage(),
+                context: context);
+          } else if (ServerError.withError(error: error).getErrorCode() ==
+              404) {
+            toast(
+                msg: ServerError.withError(error: error).getErrorMessage(),
+                context: context);
           } else {
             toast(
                 context: context,
@@ -103,7 +113,11 @@ class API {
   }
 
   Future getRequestHeaderData(
-      BuildContext context, String apiurl, data, String? authToken) async {
+    BuildContext context,
+    String apiurl,
+    data,
+    String token,
+  ) async {
     // if (await connectivityServices.onConnectivity()) {
     try {
       print("apiurl $apiurl");
@@ -112,11 +126,8 @@ class API {
           .get(
         apiurl,
         data: data,
-        options: DIO.Options(headers: {
-          'accept': 'application/json',
-          "x-access-token": authToken,
-          'x-secret': 'MonrooHeaders'
-        }),
+        options: DIO.Options(
+            headers: {'accept': 'application/json', "Authorization": token}),
       )
           .whenComplete(() {
         debugPrint("Getting Process is Complete:");
@@ -151,8 +162,9 @@ class API {
   Future postRequest(
     BuildContext context,
     String apiurl,
-    var data,
-  ) async {
+    var data, {
+    bool isJsonType = false,
+  }) async {
     // if (await connectivityServices.onConnectivity()) {
     try {
       var dio = DIO.Dio();
@@ -162,8 +174,8 @@ class API {
         data: data,
         options: DIO.Options(headers: {
           'Accept': '*/*',
-          'Content-type': 'application/json',
-          'x-secret': 'MonrooHeaders'
+          'Content-type':
+              isJsonType ? 'application/json' : 'multipart/form-data',
         }),
         onSendProgress: (int sent, int total) {
           debugPrint("total ${total.toString()} " "   sent ${sent.toString()}");
@@ -173,6 +185,16 @@ class API {
       }).catchError((onError) {
         if (ServerError.withError(error: onError).getErrorCode() == 500) {
           toast(context: context, msg: "SomeThing Went Wrong");
+        } else if (ServerError.withError(error: onError).getErrorCode() ==
+            401) {
+          toast(
+              context: context,
+              msg: ServerError.withError(error: onError).getErrorMessage());
+        } else if (ServerError.withError(error: onError).getErrorCode() ==
+            404) {
+          toast(
+              context: context,
+              msg: ServerError.withError(error: onError).getErrorMessage());
         }
         debugPrint("POST Error: $onError");
         if (onError is SocketException) {
@@ -214,8 +236,9 @@ class API {
     // }
   }
 
-  Future postRequestHeader(BuildContext context, String apiurl, var data,
-      {bool isJsonType = false, String? authToken}) async {
+  Future postRequestHeader(
+      BuildContext context, String apiurl, var data, String token,
+      {bool isJsonType = false}) async {
     // if (await connectivityServices.onConnectivity()) {
     try {
       var dio = DIO.Dio();
@@ -227,8 +250,7 @@ class API {
           'accept': '*/*',
           'Content-type':
               isJsonType ? 'application/json' : 'multipart/form-data',
-          'x-secret':'MonrooHeaders',
-          "x-access-token": authToken
+          "Authorization": token,
         }, responseType: DIO.ResponseType.plain),
         onSendProgress: (int sent, int total) {
           debugPrint("total ${total.toString()} " "   sent ${sent.toString()}");
@@ -242,6 +264,16 @@ class API {
         } else {
           if (onError is DIO.DioError) {
             if (ServerError.withError(error: onError).getErrorCode() == 401) {
+            } else if (ServerError.withError(error: onError).getErrorCode() ==
+                401) {
+              toast(
+                  context: context,
+                  msg: ServerError.withError(error: onError).getErrorMessage());
+            } else if (ServerError.withError(error: onError).getErrorCode() ==
+                404) {
+              toast(
+                  context: context,
+                  msg: ServerError.withError(error: onError).getErrorMessage());
             } else {
               toast(
                   context: context,
@@ -275,7 +307,10 @@ class API {
   }
 
   Future postRequestHeaderWithoutBody(
-      BuildContext context, String apiurl, String authToken) async {
+    BuildContext context,
+    String apiurl,
+    String token,
+  ) async {
     // if (await connectivityServices.onConnectivity()) {
     try {
       print(apiurl);
@@ -287,8 +322,7 @@ class API {
         options: DIO.Options(headers: {
           'Accept': '*/*',
           'Content-type': 'application/json',
-          'x-secret': 'MonrooHeaders',
-          "x-access-token": authToken,
+          "Authorization": token,
         }),
         onSendProgress: (int sent, int total) {
           debugPrint("total ${total.toString()} " "   sent ${sent.toString()}");

@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gbk_tour/config/extensions/font_extension.dart';
+
 import 'package:gbk_tour/core/colors/color_palette.dart';
 import 'package:gbk_tour/gen/assets.gen.dart';
 import 'package:gbk_tour/gen/fonts.gen.dart';
+
 import 'package:gbk_tour/utils/loader/loading_controller.dart';
 
 class LoadingScreen {

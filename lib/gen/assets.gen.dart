@@ -16,14 +16,20 @@ class $AssetsImagesGen {
   AssetGenImage get background =>
       const AssetGenImage('assets/images/background.png');
 
+  /// File path: assets/images/kashmir.png
+  AssetGenImage get kashmir => const AssetGenImage('assets/images/kashmir.png');
+
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
+
+  /// File path: assets/images/map.png
+  AssetGenImage get map => const AssetGenImage('assets/images/map.png');
 
   /// File path: assets/images/splash.png
   AssetGenImage get splash => const AssetGenImage('assets/images/splash.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [background, logo, splash];
+  List<AssetGenImage> get values => [background, kashmir, logo, map, splash];
 }
 
 class Assets {

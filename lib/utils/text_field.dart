@@ -1,25 +1,34 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gbk_tour/config/extensions/font_extension.dart';
 
 import 'package:gbk_tour/core/colors/color_palette.dart';
 import 'package:gbk_tour/gen/fonts.gen.dart';
+
 import 'package:pinput/pinput.dart';
 
 typedef OnChange = Function(String);
 typedef OnCompleted = Function(String);
+typedef OnTap = Function();
 textField(
     {required String hintText,
     bool obsecure = false,
     TextEditingController? controller,
     TextInputType textInputType = TextInputType.text,
     OnChange? onChange,
+    OnTap? onTap,
     Widget? suffixIcon,
+    bool readOnly = false,
+    List<TextInputFormatter>? inputFormatter,
     Color fillColor = ColorPalette.white,
     required BuildContext context}) {
   final border = OutlineInputBorder(borderRadius: BorderRadius.circular(8));
   return TextFormField(
+    readOnly: readOnly,
+    onTap: onTap,
+    inputFormatters:inputFormatter,
     onChanged: onChange,
     controller: controller,
     obscureText: obsecure,
