@@ -19,8 +19,8 @@ final List<HotelsResModel> ? hotels;
 class GetHotelsEvent implements HotelsEvent{
   final BuildContext context;
   
-  final int districId;
-  const GetHotelsEvent({required this.context,required this.districId});
+  final int picnicPointId;
+  const GetHotelsEvent({required this.context,required this.picnicPointId});
 }
 
 @immutable

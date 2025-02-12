@@ -2,10 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:gbk_tour/config/extensions/height_width_box_extension.dart';
 import 'package:gbk_tour/config/extensions/size_extension.dart';
+import 'package:gbk_tour/config/router/routes.dart';
 import 'package:gbk_tour/core/colors/color_palette.dart';
 import 'package:gbk_tour/core/constant/constant.dart';
 import 'package:gbk_tour/data/models/hotels/hotels_res_model.dart';
 import 'package:gbk_tour/utils/app_text.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 
 typedef OnTap = VoidCallback;
 Widget hotelTile({
@@ -32,21 +34,34 @@ Widget hotelTile({
                     itemCount: image.length,
                     itemBuilder: (context, index1, index2) {
                       HotelImagesModel model = image[index1];
-                      return model.image_path == null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                model.image_path!,
-                                fit: BoxFit.cover,
+                      if (model.image_path == null) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            model.image_path!,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      } else {
+                        return TranslateAnimation(
+                            fromY: -context.getSize.height,
+                            child: Hero(
+                              tag: 'hero${model.image_path}',
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, Routes.zoom,
+                                        arguments: model.image_path);
+                                  },
+                                  child: Image.network(
+                                    Constant.serverUrl + model.image_path!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                Constant.serverUrl + model.image_path!,
-                                fit: BoxFit.cover,
-                              ),
-                            );
+                            ));
+                      }
                     },
                     options: CarouselOptions(
                       enlargeCenterPage: true,
@@ -84,12 +99,16 @@ Widget hotelTile({
                     context.widthBox(
                       w: 0.02,
                     ),
-                    appText(
-                      context: context,
-                      text: title,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    Expanded(
+                      child: appText(
+                        align: TextAlign.left,
+                        context: context,
+                        text: title,
+                        maxLines: 5,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
                   ],
                 ),
                 context.heightBox(
@@ -99,6 +118,7 @@ Widget hotelTile({
                   align: TextAlign.left,
                   context: context,
                   text: description,
+                  maxLines: 10,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),

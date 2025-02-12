@@ -9,6 +9,7 @@ import 'package:gbk_tour/core/bloc/auth/auth_bloc.dart';
 import 'package:gbk_tour/core/bloc/auth/auth_event.dart';
 import 'package:gbk_tour/core/bloc/auth/auth_state.dart';
 import 'package:gbk_tour/core/colors/color_palette.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
 
 import 'package:gbk_tour/utils/text_button.dart';
 import 'package:gbk_tour/gen/assets.gen.dart';
@@ -17,6 +18,7 @@ import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
 import 'package:gbk_tour/utils/text_field.dart';
 import 'package:gbk_tour/utils/toast.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 
 class OtpVerificationForm extends HookWidget {
   const OtpVerificationForm({super.key});
@@ -42,7 +44,7 @@ class OtpVerificationForm extends HookWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  Align(
+               TranslateAnimation(child:    Align(
                     alignment: Alignment.topLeft,
                     child: GestureDetector(
                       onTap: () {
@@ -55,32 +57,34 @@ class OtpVerificationForm extends HookWidget {
                         color: ColorPalette.white,
                       ),
                     ),
-                  ),
-                  Assets.images.logo
-                      .image(height: context.getSize.height * 0.2),
-                  appText(
+                  ),),
+                ScaleAnimation(child:    Assets.images.logo
+                      .image(height: context.getSize.height * 0.2),),
+                TranslateAnimation(child:    appText(
                     context: context,
                     text: _isEmail ? "Check Email" : "Check Phone",
                     align: TextAlign.left,
                     fontSize: 36,
                     fontWeight: FontWeight.w800,
-                  ),
+                  ),),
                   context.heightBox(h: 0.005),
-                  appText(
+                 TranslateAnimation(child:   appText(
                     context: context,
                     align: TextAlign.left,
                     text:
                         'We sent a reset link to $_otpProvider\nenter 5 digit code that mentioned in the email',
                     fontSize: 14,
-                  ),
+                  ),),
                   context.heightBox(h: 0.04),
-                  pinField(
+              TranslateAnimation(
+                fromLeft: false,
+                child:      pinField(
                       context: context,
                       onChange: (val) {
                         _value.value = val;
-                      }),
+                      }),),
                   context.heightBox(h: 0.1),
-                  textButton(
+              ScaleAnimation(child:      textButton(
                     bgColor: _value.value.length < 5
                         ? ColorPalette.grey
                         : ColorPalette.black,
@@ -97,25 +101,27 @@ class OtpVerificationForm extends HookWidget {
                             AuthNavigationEvent(index: 5, value: _otpProvider));
                       }
                     },
-                  ),
+                  ),),
                   context.heightBox(h: 0.02),
                   Row(
                     children: [
                       Expanded(
-                          child: Container(
+                          child: TranslateAnimation(child:  Container(
                         color: ColorPalette.white,
                         height: 1,
-                      )),
+                      )),),
                       context.widthBox(w: 0.03),
                       Expanded(
-                          child: Container(
+                          child: TranslateAnimation(
+                            fromLeft: false,
+                            child:  Container(
                         color: ColorPalette.white,
                         height: 1,
-                      )),
-                      context.heightBox(h: 0.03),
+                      )),),
+                     
                     ],
                   ),
-                  Row(
+               TranslateAnimation(child:     Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       appText(
@@ -139,7 +145,7 @@ class OtpVerificationForm extends HookWidget {
                         ),
                       )
                     ],
-                  )
+                  )),
                 ],
               ),
             ),

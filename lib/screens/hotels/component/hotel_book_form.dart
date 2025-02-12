@@ -15,9 +15,12 @@ import 'package:gbk_tour/gen/assets.gen.dart';
 import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
 import 'package:gbk_tour/utils/cnic_formatter.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
+import 'package:gbk_tour/utils/success_book%20_dialog.dart';
 import 'package:gbk_tour/utils/text_button.dart';
 import 'package:gbk_tour/utils/text_field.dart';
 import 'package:gbk_tour/utils/toast.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 import 'package:intl/intl.dart';
 
 class HotelBookForm extends HookWidget {
@@ -57,81 +60,102 @@ class HotelBookForm extends HookWidget {
                         shrinkWrap: true,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         children: [
-                          Assets.images.logo
-                              .image(height: context.getSize.height * 0.2),
-                          appText(
-                            context: context,
-                            text: "Booking Form",
-                            fontSize: 36,
-                            fontWeight: FontWeight.w800,
+                          ScaleAnimation(
+                            child: Assets.images.logo
+                                .image(height: context.getSize.height * 0.2),
+                          ),
+                          ScaleAnimation(
+                            child: appText(
+                              context: context,
+                              text: "Booking Form",
+                              fontSize: 36,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                           context.heightBox(h: 0.008),
-                          textField(
-                            controller: _fullName,
-                            hintText: 'Enter your full name',
-                            context: context,
+                          TranslateAnimation(
+                            child: textField(
+                              controller: _fullName,
+                              hintText: 'Enter your full name',
+                              context: context,
+                            ),
                           ),
                           context.heightBox(h: 0.01),
-                          textField(
-                            controller: _email,
-                            hintText: 'Enter your email address',
-                            context: context,
+                          TranslateAnimation(
+                            child: textField(
+                              controller: _email,
+                              hintText: 'Enter your email address',
+                              context: context,
+                            ),
+                            fromLeft: false,
                           ),
                           context.heightBox(h: 0.01),
-                          textField(
-                            controller: _phone,
-                            textInputType: TextInputType.phone,
-                            hintText: 'Enter your phone number',
-                            context: context,
+                          TranslateAnimation(
+                            child: textField(
+                              controller: _phone,
+                              textInputType: TextInputType.phone,
+                              hintText: 'Enter your phone number',
+                              context: context,
+                            ),
                           ),
                           context.heightBox(h: 0.01),
-                          textField(
-                            inputFormatter: [CnicFormatter()],
-                            onChange: (value) {
-                              _cnic.text = value;
-                            },
-                            textInputType: TextInputType.number,
-                            hintText: 'Enter your cnic',
-                            context: context,
+                          TranslateAnimation(
+                            child: textField(
+                              inputFormatter: [CnicFormatter()],
+                              onChange: (value) {
+                                _cnic.text = value;
+                              },
+                              textInputType: TextInputType.number,
+                              hintText: 'Enter your cnic',
+                              context: context,
+                            ),
+                            fromLeft: false,
                           ),
                           context.heightBox(h: 0.01),
-                          textField(
-                            onChange: (value) {
-                              _address.text = value;
-                            },
-                            hintText: 'Enter your address',
-                            context: context,
+                          ScaleAnimation(
+                            child: textField(
+                              onChange: (value) {
+                                _address.text = value;
+                              },
+                              hintText: 'Enter your address',
+                              context: context,
+                            ),
                           ),
                           context.heightBox(h: 0.01),
                           Row(
                             children: [
                               Expanded(
-                                child: textField(
-                                  readOnly: true,
-                                  controller: _checkIn,
-                                  onTap: () {
-                                    _showDatePicker(context, onChange: (val) {
-                                      _checkIn.text =
-                                          '${val.year}-${val.month}-${val.day}';
-                                    });
-                                  },
-                                  hintText: 'Check-In',
-                                  context: context,
+                                child: TranslateAnimation(
+                                  child: textField(
+                                    readOnly: true,
+                                    controller: _checkIn,
+                                    onTap: () {
+                                      _showDatePicker(context, onChange: (val) {
+                                        _checkIn.text =
+                                            '${val.year}-${val.month}-${val.day}';
+                                      });
+                                    },
+                                    hintText: 'Check-In',
+                                    context: context,
+                                  ),
                                 ),
                               ),
                               context.widthBox(w: 0.02),
                               Expanded(
-                                child: textField(
-                                  readOnly: true,
-                                  controller: _checkOut,
-                                  onTap: () {
-                                    _showDatePicker(context, onChange: (val) {
-                                      _checkOut.text =
-                                          '${val.year}-${val.month}-${val.day}';
-                                    });
-                                  },
-                                  hintText: 'Check-Out',
-                                  context: context,
+                                child: TranslateAnimation(
+                                  fromLeft: false,
+                                  child: textField(
+                                    readOnly: true,
+                                    controller: _checkOut,
+                                    onTap: () {
+                                      _showDatePicker(context, onChange: (val) {
+                                        _checkOut.text =
+                                            '${val.year}-${val.month}-${val.day}';
+                                      });
+                                    },
+                                    hintText: 'Check-Out',
+                                    context: context,
+                                  ),
                                 ),
                               ),
                             ],
@@ -147,29 +171,33 @@ class HotelBookForm extends HookWidget {
                             ? const CircularProgressIndicator(
                                 color: ColorPalette.white,
                               )
-                            : textButton(
-                                bgColor: Colors.black,
-                                context: context,
-                                title: 'BOOK NOW',
-                                onTap: () {
-                                  if (_checkIn.text.isEmpty) {
-                                    toast(
-                                        msg: 'Pick Check-In Date First.',
-                                        context: context);
-                                  } else {
-                                    context.read<HotelsBloc>().add(
-                                        BookHotelEvent(
-                                            model: BookingModel(
-                                                hotel_id: state.getDetail!.id!,
-                                                name: _fullName.text,
-                                                cnic: _cnic.text,
-                                                address: _address.text,
-                                                checkin: _checkIn.text,
-                                                checkout: _checkOut.text,
-                                                phone: _phone.text),
-                                            context: context));
-                                  }
-                                }),
+                            : ScaleAnimation(
+                                child: textButton(
+                                    bgColor: Colors.black,
+                                    context: context,
+                                    title: 'BOOK NOW',
+                                    onTap: () {
+                                      
+                                      if (_checkIn.text.isEmpty) {
+                                        toast(
+                                            msg: 'Pick Check-In Date First.',
+                                            context: context);
+                                      } else {
+                                        context.read<HotelsBloc>().add(
+                                            BookHotelEvent(
+                                                model: BookingModel(
+                                                    hotel_id:
+                                                        state.getDetail!.id!,
+                                                    name: _fullName.text,
+                                                    cnic: _cnic.text,
+                                                    address: _address.text,
+                                                    checkin: _checkIn.text,
+                                                    checkout: _checkOut.text,
+                                                    phone: _phone.text),
+                                                context: context));
+                                      }
+                                    }),
+                              ),
                       ),
                     ),
                   ],

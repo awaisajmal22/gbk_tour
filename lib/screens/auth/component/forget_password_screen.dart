@@ -12,9 +12,11 @@ import 'package:gbk_tour/gen/assets.gen.dart';
 
 import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
 import 'package:gbk_tour/utils/text_button.dart';
 import 'package:gbk_tour/utils/text_field.dart';
 import 'package:gbk_tour/utils/toast.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 
 class ForgetPasswordForm extends HookWidget {
   const ForgetPasswordForm({super.key});
@@ -47,33 +49,43 @@ class ForgetPasswordForm extends HookWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: GestureDetector(
-                  onTap: () {
-                    context.read<AuthBloc>().add(AuthNavigationEvent(index: 1));
-                  },
-                  child: const Icon(
-                    Icons.arrow_back,
-                    color: ColorPalette.white,
+              TranslateAnimation(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: GestureDetector(
+                    onTap: () {
+                      context
+                          .read<AuthBloc>()
+                          .add(AuthNavigationEvent(index: 1));
+                    },
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: ColorPalette.white,
+                    ),
                   ),
                 ),
               ),
-              Assets.images.logo.image(height: context.getSize.height * 0.2),
-              appText(
-                context: context,
-                text: "Forget Password",
-                align: TextAlign.left,
-                fontSize: 36,
-                fontWeight: FontWeight.w800,
+              ScaleAnimation(
+                child: Assets.images.logo
+                    .image(height: context.getSize.height * 0.2),
+              ),
+              ScaleAnimation(
+                child: appText(
+                  context: context,
+                  text: "Forget Password",
+                  align: TextAlign.left,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               context.heightBox(h: 0.005),
-              appText(
-                context: context,
-                align: TextAlign.left,
-                text:
-                    'Please enter your email or phone no  to reset the password',
-                fontSize: 14,
+              TranslateAnimation(
+                child: appText(
+                  context: context,
+                  align: TextAlign.left,
+                  text: 'Please enter your email address to reset the password',
+                  fontSize: 14,
+                ),
               ),
               context.heightBox(h: 0.01),
               // Row(
@@ -115,30 +127,38 @@ class ForgetPasswordForm extends HookWidget {
               //   }),
               // ),
               context.heightBox(h: 0.008),
-              textField(
-                controller: _controller,
-                textInputType: _selectedTab.value == 0
-                    ? TextInputType.emailAddress
-                    : TextInputType.number,
-                onChange: (val) {
-                  _value.value = val;
-                },
-                hintText: 'Enter Your Email',
-                context: context,
+              TranslateAnimation(
+                child: textField(
+                  controller: _controller,
+                  textInputType: _selectedTab.value == 0
+                      ? TextInputType.emailAddress
+                      : TextInputType.number,
+                  onChange: (val) {
+                    _value.value = val;
+                  },
+                  hintText: 'Enter Your Email',
+                  context: context,
+                ),
               ),
               context.heightBox(h: 0.1),
-              textButton(
-                bgColor:
-                    _value.value == '' ? ColorPalette.grey : ColorPalette.black,
-                context: context,
-                title: 'SEND',
-                onTap: () {
-                  if (!_value.value.isValidEmail()) {
-                    toast(msg: 'Please enter valid email address.', context: context);
-                  }else{
-                    context.read<AuthBloc>().add(AuthSendOtpEvent(context: context, email: _value.value));
-                  }
-                },
+              ScaleAnimation(
+                child: textButton(
+                  bgColor: _value.value == ''
+                      ? ColorPalette.grey
+                      : ColorPalette.black,
+                  context: context,
+                  title: 'SEND',
+                  onTap: () {
+                    if (!_value.value.isValidEmail()) {
+                      toast(
+                          msg: 'Please enter valid email address.',
+                          context: context);
+                    } else {
+                      context.read<AuthBloc>().add(AuthSendOtpEvent(
+                          context: context, email: _value.value));
+                    }
+                  },
+                ),
               ),
               context.heightBox(h: 0.02),
             ],

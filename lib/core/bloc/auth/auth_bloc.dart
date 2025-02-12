@@ -37,6 +37,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               context: event.context, email: _prefEmail, pass: _prefPass);
           if (response.status == true) {
             storage.setAuthToken(response.token ?? '');
+             storage.setId(response.user!.id??0);
+             storage.setImage(response.user!.profile_image??'');
+          storage.setName(response.user!.name??"");
             emit(AuthLoginState(
               index: state.index,
               isloading: false,
@@ -72,9 +75,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             context: event.context, email: _email, pass: _password);
 
         if (response.status == true) {
+
           storage.setPassword(_password);
           storage.setPhoneAndEmail(_email);
+          storage.setId(response.user!.id??0);
           storage.setAuthToken(response.token ?? '');
+          storage.setImage(response.user!.profile_image??'');
+          storage.setName(response.user!.name??"");
           emit(AuthLoginState(
             index: state.index,
             isloading: false,

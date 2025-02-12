@@ -10,6 +10,7 @@ import 'package:gbk_tour/core/bloc/auth/auth_bloc.dart';
 import 'package:gbk_tour/core/bloc/auth/auth_event.dart';
 import 'package:gbk_tour/core/bloc/auth/auth_state.dart';
 import 'package:gbk_tour/core/colors/color_palette.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
 
 import 'package:gbk_tour/utils/text_button.dart';
 import 'package:gbk_tour/gen/assets.gen.dart';
@@ -18,6 +19,7 @@ import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
 import 'package:gbk_tour/utils/text_field.dart';
 import 'package:gbk_tour/utils/toast.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 
 class ChangePasswordForm extends HookWidget {
   const ChangePasswordForm({super.key});
@@ -43,91 +45,108 @@ class ChangePasswordForm extends HookWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 context.heightBox(h: 0.05),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: GestureDetector(
-                    onTap: () {
-                      context
-                          .read<AuthBloc>()
-                          .add(const AuthNavigationEvent(index: 1));
-                    },
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: ColorPalette.white,
+                TranslateAnimation(
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: GestureDetector(
+                      onTap: () {
+                        context
+                            .read<AuthBloc>()
+                            .add(const AuthNavigationEvent(index: 1));
+                      },
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: ColorPalette.white,
+                      ),
                     ),
                   ),
                 ),
-                Assets.images.logo.image(height: context.getSize.height * 0.2),
-                appText(
-                  context: context,
-                  text: "Set New Password",
-                  align: TextAlign.left,
-                  fontSize: 36,
-                  fontWeight: FontWeight.w800,
+                ScaleAnimation(
+                  child: Assets.images.logo
+                      .image(height: context.getSize.height * 0.2),
+                ),
+                ScaleAnimation(
+                  child: appText(
+                    context: context,
+                    text: "Set New Password",
+                    align: TextAlign.left,
+                    fontSize: 36,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 context.heightBox(h: 0.005),
-                appText(
-                  context: context,
-                  align: TextAlign.left,
-                  text:
-                      'Create a new password. Ensure it differs from previous ones for security',
-                  fontSize: 14,
+                ScaleAnimation(
+                  child: appText(
+                    context: context,
+                    align: TextAlign.left,
+                    text:
+                        'Create a new password. Ensure it differs from previous ones for security',
+                    fontSize: 14,
+                  ),
                 ),
                 context.heightBox(h: 0.01),
-                textField(
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      obsecure1.value = !obsecure1.value;
-                    },
-                    child: Icon(
-                      obsecure1.value
-                          ? CupertinoIcons.eye
-                          : CupertinoIcons.eye_slash,
+                TranslateAnimation(
+                  child: textField(
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        obsecure1.value = !obsecure1.value;
+                      },
+                      child: Icon(
+                        obsecure1.value
+                            ? CupertinoIcons.eye
+                            : CupertinoIcons.eye_slash,
+                      ),
                     ),
+                    controller: _password,
+                    obsecure: obsecure1.value,
+                    hintText: 'Enter your new password',
+                    context: context,
                   ),
-                  controller: _password,
-                  obsecure: obsecure1.value,
-                  hintText: 'Enter your new password',
-                  context: context,
                 ),
                 context.heightBox(h: 0.01),
-                textField(
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      obsecure2.value = !obsecure2.value;
-                    },
-                    child: Icon(
-                      obsecure2.value
-                          ? CupertinoIcons.eye
-                          : CupertinoIcons.eye_slash,
+                TranslateAnimation(
+                  fromLeft: false,
+                  child: textField(
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        obsecure2.value = !obsecure2.value;
+                      },
+                      child: Icon(
+                        obsecure2.value
+                            ? CupertinoIcons.eye
+                            : CupertinoIcons.eye_slash,
+                      ),
                     ),
+                    controller: _confirmPassword,
+                    obsecure: obsecure2.value,
+                    hintText: 'Re-enter password',
+                    context: context,
                   ),
-                  controller: _confirmPassword,
-                  obsecure: obsecure2.value,
-                  hintText: 'Re-enter password',
-                  context: context,
                 ),
                 context.heightBox(h: 0.04),
-                textButton(
-                  bgColor: ColorPalette.black,
-                  context: context,
-                  title: 'UPDATE',
-                  onTap: () {
-                    print(state.forgetValue);
-                    if (_password.text.isEmpty) {
-                      toast(
-                          msg: 'Please enter your password', context: context);
-                    } else if (_password.text.length < 6) {
-                      toast(msg: 'Password is too small.', context: context);
-                    } else if (_password.text != _confirmPassword.text) {
-                      toast(msg: 'Password not match.', context: context);
-                    } else {
-                      context.read<AuthBloc>().add(AuthChangePassEvent(
-                          context: context,
-                          email: state.forgetValue!,
-                          password: _password.text));
-                    }
-                  },
+                ScaleAnimation(
+                  child: textButton(
+                    bgColor: ColorPalette.black,
+                    context: context,
+                    title: 'UPDATE',
+                    onTap: () {
+                      print(state.forgetValue);
+                      if (_password.text.isEmpty) {
+                        toast(
+                            msg: 'Please enter your password',
+                            context: context);
+                      } else if (_password.text.length < 6) {
+                        toast(msg: 'Password is too small.', context: context);
+                      } else if (_password.text != _confirmPassword.text) {
+                        toast(msg: 'Password not match.', context: context);
+                      } else {
+                        context.read<AuthBloc>().add(AuthChangePassEvent(
+                            context: context,
+                            email: state.forgetValue!,
+                            password: _password.text));
+                      }
+                    },
+                  ),
                 ),
                 context.heightBox(h: 0.02),
               ],

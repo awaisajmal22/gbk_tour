@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gbk_tour/config/extensions/height_width_box_extension.dart';
+import 'package:gbk_tour/config/extensions/size_extension.dart';
 import 'package:gbk_tour/core/bloc/hotels/hotels_bloc.dart';
 import 'package:gbk_tour/core/bloc/hotels/hotels_event.dart';
 import 'package:gbk_tour/core/bloc/hotels/hotels_state.dart';
@@ -12,6 +13,8 @@ import 'package:gbk_tour/screens/hotels/component/hotel_tile.dart';
 import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
 import 'package:gbk_tour/utils/progress_indicator.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 
 class HotelWidget extends HookWidget {
   final PicnicSpotResModel model;
@@ -45,7 +48,7 @@ class HotelWidget extends HookWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: appText(
+                            child:ScaleAnimation(child: appText(
                               maxLines: 5,
                               context: context,
                               text:
@@ -53,47 +56,53 @@ class HotelWidget extends HookWidget {
                               fontSize: 25,
                               fontWeight: FontWeight.w700,
                             ),
-                          ),
+                          ),),
                           context.heightBox(h: 0.02),
                           if (dataList.isEmpty)
                             Expanded(
                                 child: Center(
-                              child: appText(
+                              child:ScaleAnimation
+                              (child:  appText(
                                   context: context,
                                   text: "No Picnic point spotted."),
-                            ))
+                            )))
                           else
                             Expanded(
                               child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: dataList.length,
                                   itemBuilder: (context, index) {
-                                    return Column(
-                                      children: [
-                                        hotelTile(
-                                          description:
-                                              dataList[index].description!,
-                                          context: context,
-                                          onTap: () {
-                                            selectHotel(index, dataList[index]);
-                                            context.read<HotelsBloc>().add(
-                                                HotelNavigationEvent(
-                                                    index: 2,
-                                                    context: context,
-                                                    hotels: dataList,
-                                                    detail: dataList[index]));
-                                          },
-                                          image: dataList[index].images,
-                                          title: dataList[index].title!,
-                                          color: _selectedIndex.value == index
-                                              ? ColorPalette.white
-                                              : ColorPalette.transparent,
-                                        ),
-                                        if (dataList.length - 1 == index)
-                                          context.heightBox(
-                                            h: 0.08,
-                                          )
-                                      ],
+                                    return TranslateAnimation(
+                                       fromLeft: index.isEven ? true : false,
+                                       fromY: -context.getSize.height,
+                                      child: Column(
+                                        children: [
+                                          hotelTile(
+                                            description:
+                                                dataList[index].description!,
+                                            context: context,
+                                            onTap: () {
+                                              selectHotel(index, dataList[index]);
+                                              context.read<HotelsBloc>().add(
+                                                  HotelNavigationEvent(
+                                                      index: 2,
+                                                      context: context,
+                                                      hotels: dataList,
+                                                      detail: dataList[index]));
+                                            },
+                                            image: dataList[index].images,
+                                            title: dataList[index].title!,
+                                            color: _selectedIndex.value == index
+                                                ? ColorPalette.white
+                                                : ColorPalette.transparent,
+                                          ),
+                                          if (dataList.length - 1 == index)
+                                            context.heightBox(
+                                              h: 0.08,
+                                            )
+                                        ],
+                                      ),
                                     );
                                   }),
                             ),

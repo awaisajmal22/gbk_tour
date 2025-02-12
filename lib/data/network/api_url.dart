@@ -8,6 +8,7 @@ class ApiUrl{
   static const province = '$_mainUrl/provinces';
   static const distric ='$_mainUrl/districts?province_id=';
   static const picnicspot ='$_mainUrl/district_nearbyplace?district=';
-  static const hotels ='$_mainUrl/district/hotels?district=';
+  static const hotels ='$_mainUrl/picnic_point/hotels?picnic_point_id=';
   static const booking ='$_mainUrl/hotel/booking';
+  static const uploadImage ='$_mainUrl/update/profile_image';
 }

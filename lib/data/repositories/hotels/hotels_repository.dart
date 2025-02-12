@@ -7,7 +7,7 @@ import 'package:gbk_tour/data/models/picnicspot/picnic_spot_res_model.dart';
 abstract class HotelsRepository{
   Future<List<HotelsResModel>> getHotels({
     required BuildContext context,
-    required int districtId,
+    required int picnicPointId,
     required String token,
   });
 

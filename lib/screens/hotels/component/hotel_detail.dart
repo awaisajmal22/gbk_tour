@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gbk_tour/config/extensions/height_width_box_extension.dart';
 import 'package:gbk_tour/config/extensions/size_extension.dart';
+import 'package:gbk_tour/config/router/routes.dart';
 import 'package:gbk_tour/core/bloc/hotels/hotels_bloc.dart';
 import 'package:gbk_tour/core/bloc/hotels/hotels_event.dart';
 import 'package:gbk_tour/core/bloc/hotels/hotels_state.dart';
@@ -14,7 +15,9 @@ import 'package:gbk_tour/data/models/hotels/hotels_res_model.dart';
 import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
 import 'package:gbk_tour/utils/progress_indicator.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
 import 'package:gbk_tour/utils/text_button.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HotelDetail extends HookWidget {
@@ -55,7 +58,8 @@ class HotelDetail extends HookWidget {
                   onPopInvoked: (val) {
                     if (val == false) {
                       context.read<HotelsBloc>().add(GetHotelsEvent(
-                          context: context, districId: model.district_id!));
+                          context: context,
+                          picnicPointId: model.picnic_point_id!));
                     }
                   },
                   child: SafeArea(
@@ -67,13 +71,15 @@ class HotelDetail extends HookWidget {
                         children: [
                           Align(
                             alignment: Alignment.center,
-                            child: appText(
-                                align: TextAlign.center,
-                                context: context,
-                                maxLines: 5,
-                                text: model.title!,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700),
+                            child: ScaleAnimation(
+                              child: appText(
+                                  align: TextAlign.center,
+                                  context: context,
+                                  maxLines: 5,
+                                  text: model.title!,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w700),
+                            ),
                           ),
                           context.heightBox(h: 0.01),
                           CarouselSlider.builder(
@@ -86,13 +92,32 @@ class HotelDetail extends HookWidget {
                                           fit: BoxFit.cover,
                                         ),
                                       )
-                                    : ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Image.network(
-                                          Constant.serverUrl +
-                                              model.images[index1].image_path!,
+                                    : TranslateAnimation(
+                                        fromY: -context.getSize.height,
+                                        child: Hero(
+                                          tag:
+                                              'hero${model.images[index1].image_path!}',
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                    context, Routes.zoom,
+                                                    arguments: model
+                                                        .images[index1]
+                                                        .image_path!);
+                                              },
+                                              child: Image.network(
+                                                Constant.serverUrl +
+                                                    model.images[index1]
+                                                        .image_path!,
+                                                fit: BoxFit.cover,
 
-                                          // width: context.getSize.width * 0.8,
+                                                // width: context.getSize.width * 0.8,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       );
                               },
@@ -106,90 +131,119 @@ class HotelDetail extends HookWidget {
                                     model.images.length == 1 ? false : true,
                                 viewportFraction:
                                     model.images.length == 1 ? 0.9 : 0.8,
-                                aspectRatio: 2.0,
+                                aspectRatio: 1.8,
                                 initialPage: 1,
                               )),
                           Expanded(
                             child: SingleChildScrollView(
+                              physics: const BouncingScrollPhysics(),
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   context.heightBox(h: 0.03),
-                                  appText(
-                                      align: TextAlign.left,
-                                      context: context,
-                                      text: 'Description',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700),
-                                  appText(
-                                      maxLines: 100,
-                                      context: context,
-                                      text: model.description!,
-                                      align: TextAlign.left),
-                                  context.heightBox(h: 0.02),
-                                  appText(
-                                      align: TextAlign.left,
-                                      context: context,
-                                      text: 'Rent',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700),
-                                  appText(
-                                      align: TextAlign.left,
-                                      context: context,
-                                      text: model.rent.toString()),
-                                  context.heightBox(h: 0.02),
-                                  appText(
-                                      align: TextAlign.left,
-                                      context: context,
-                                      text: 'Contact No',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700),
-                                  GestureDetector(
-                                      onTap: () {
-                                        _makePhoneCall(
-                                            model.contact_no.toString());
-                                      },
+                                  TranslateAnimation(
+                                    child: appText(
+                                        align: TextAlign.left,
+                                        context: context,
+                                        text: 'Description',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  TranslateAnimation(
                                       child: appText(
-                                          align: TextAlign.left,
+                                          maxLines: 100,
                                           context: context,
-                                          text: model.contact_no.toString())),
+                                          text: model.description!,
+                                          align: TextAlign.left),
+                                      fromLeft: false),
                                   context.heightBox(h: 0.02),
-                                  appText(
-                                      align: TextAlign.left,
-                                      context: context,
-                                      text: 'Address',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700),
-                                  appText(
-                                      align: TextAlign.left,
-                                      context: context,
-                                      text: model.address.toString()),
+                                  TranslateAnimation(
+                                    child: appText(
+                                        align: TextAlign.left,
+                                        context: context,
+                                        text: 'Rent',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  TranslateAnimation(
+                                    fromLeft: false,
+                                    child: appText(
+                                        align: TextAlign.left,
+                                        context: context,
+                                        text: "Rs ${model.rent.toString()}"),
+                                  ),
                                   context.heightBox(h: 0.02),
-                                  appText(
-                                      align: TextAlign.left,
-                                      context: context,
-                                      text: 'Map Location',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700),
+                                  TranslateAnimation(
+                                    child: appText(
+                                        align: TextAlign.left,
+                                        context: context,
+                                        text: 'Contact No',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  TranslateAnimation(
+                                    fromLeft: false,
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          _makePhoneCall(
+                                              '0${model.contact_no.toString()}');
+                                        },
+                                        child: appText(
+                                            align: TextAlign.left,
+                                            context: context,
+                                            text: '0${model.contact_no.toString()}')),
+                                  ),
+                                  context.heightBox(h: 0.02),
+                                  TranslateAnimation(
+                                    child: appText(
+                                        align: TextAlign.left,
+                                        context: context,
+                                        text: 'Address',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  TranslateAnimation(
+                                    child: appText(
+                                        align: TextAlign.left,
+                                        context: context,
+                                        text: model.address.toString()),
+                                    fromLeft: false,
+                                  ),
+                                  context.heightBox(h: 0.02),
+                                  TranslateAnimation(
+                                    child: appText(
+                                        align: TextAlign.left,
+                                        context: context,
+                                        text: 'Map Location',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700),
+                                  ),
                                   context.heightBox(h: 0.01),
-                                  GestureDetector(
-                                      onTap: () {
-                                        _launch(Uri.parse(
-                                            model.maps_location.toString()));
-                                      },
-                                      child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: ColorPalette.white),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: const Icon(
-                                            CupertinoIcons.map_fill,
-                                            color: ColorPalette.white,
-                                          ))),
+                                  ScaleAnimation(
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          if (model.maps_location != null ||
+                                              model.maps_location != '') {
+                                            _launch(Uri.parse(model
+                                                .maps_location
+                                                .toString()));
+                                          }
+                                        },
+                                        child: Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: ColorPalette.white),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: const Icon(
+                                              CupertinoIcons.map_fill,
+                                              color: ColorPalette.white,
+                                            ))),
+                                  ),
+                                  context.heightBox(h: 0.1)
                                 ],
                               ),
                             ),
@@ -200,17 +254,19 @@ class HotelDetail extends HookWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
                         child: FittedBox(
-                          child: textButton(
-                              bgColor: Colors.black,
-                              context: context,
-                              title: 'BOOKING',
-                              onTap: () {
-                                context.read<HotelsBloc>().add(
-                                    HotelNavigationEvent(
-                                        index: 3,
-                                        hotels: state.getHotels,
-                                        detail: state.getDetail));
-                              }),
+                          child: ScaleAnimation(
+                            child: textButton(
+                                bgColor: Colors.black,
+                                context: context,
+                                title: 'BOOKING',
+                                onTap: () {
+                                  context.read<HotelsBloc>().add(
+                                      HotelNavigationEvent(
+                                          index: 3,
+                                          hotels: state.getHotels,
+                                          detail: state.getDetail));
+                                }),
+                          ),
                         ),
                       )
                     ],

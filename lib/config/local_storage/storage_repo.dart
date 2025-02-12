@@ -7,6 +7,9 @@ class PrefStorage implements Storage {
   static const _authToken = 'token';
  
   static const _password = 'password';
+  static const _name ='name';
+  static const _image ='image';
+  static const _id ='id';
  
 static const _phoneEmail ='phoneEmail';
   Future setAuthToken(String token) async {
@@ -53,5 +56,47 @@ Future<String> getPassword() async{
   Future setPhoneAndEmail(String value) async{
    SharedPreferences pref = await SharedPreferences.getInstance();
      pref.setString(_phoneEmail, value);
+  }
+  
+  @override
+  Future<String> getImage()async {
+   SharedPreferences pref = await SharedPreferences.getInstance();
+  final image =  pref.getString(_image) ??'';
+  
+  return image;
+  }
+  
+  @override
+  Future<String> getName()async {
+     SharedPreferences pref = await SharedPreferences.getInstance();
+  final name =  pref.getString(_name) ??'';
+  
+  return name;
+  }
+  
+  @override
+  Future setImage(String image)async {
+       SharedPreferences pref = await SharedPreferences.getInstance();
+     pref.setString(_image, image);
+  }
+  
+  @override
+  Future setName(String name) async{
+     SharedPreferences pref = await SharedPreferences.getInstance();
+     pref.setString(_name, name);
+  }
+  
+  @override
+  Future<int> getId() async{
+SharedPreferences pref = await SharedPreferences.getInstance();
+  final id =  pref.getInt(_id) ??0;
+  
+  return id;
+  }
+  
+  @override
+  Future setId(int id)async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+     pref.setInt(_id, id);
   }
 }

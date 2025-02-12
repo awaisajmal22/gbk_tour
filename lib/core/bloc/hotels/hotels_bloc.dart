@@ -8,6 +8,7 @@ import 'package:gbk_tour/core/bloc/hotels/hotels_state.dart';
 import 'package:gbk_tour/data/models/hotels/booking_model.dart';
 import 'package:gbk_tour/data/models/hotels/hotels_res_model.dart';
 import 'package:gbk_tour/data/repositories/hotels/hotels_repository.dart';
+import 'package:gbk_tour/utils/success_book%20_dialog.dart';
 import 'package:gbk_tour/utils/toast.dart';
 
 class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
@@ -37,8 +38,8 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
     on<GetHotelsEvent>(
       (event, emit) async {
         emit(const GetHotelsState(isloading: true, index: 1));
-        final data =
-            await getHotels(context: event.context, districId: event.districId);
+        final data = await getHotels(
+            context: event.context, picnicPointId: event.picnicPointId);
         if (data.isEmpty) {
           emit(const GetHotelsState(isloading: false, index: 1));
         } else {
@@ -51,8 +52,8 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
         emit(GetDetailsState(
           isloading: true,
           index: state.index,
-      detail: state.getDetail,
-            hotelList: state.getHotels,
+          detail: state.getDetail,
+          hotelList: state.getHotels,
         ));
         final success =
             await bookHotel(context: event.context, model: event.model);
@@ -63,7 +64,7 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
             detail: state.getDetail,
             hotelList: state.getHotels,
           ));
-          
+          successBookDialog(context: event.context);
           toast(msg: 'Booking Info Send Successfully/', context: event.context);
         } else {
           emit(GetDetailsState(
@@ -77,10 +78,10 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
     );
   }
   Future<List<HotelsResModel>> getHotels(
-      {required BuildContext context, required int districId}) async {
+      {required BuildContext context, required int picnicPointId}) async {
     return await repository.getHotels(
         context: context,
-        districtId: districId,
+        picnicPointId: picnicPointId,
         token: await storage.getAuthToken());
   }
 

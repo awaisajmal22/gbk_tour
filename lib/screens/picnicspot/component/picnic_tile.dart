@@ -2,10 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:gbk_tour/config/extensions/height_width_box_extension.dart';
 import 'package:gbk_tour/config/extensions/size_extension.dart';
+import 'package:gbk_tour/config/router/routes.dart';
 import 'package:gbk_tour/core/colors/color_palette.dart';
 import 'package:gbk_tour/core/constant/constant.dart';
 import 'package:gbk_tour/data/models/picnicspot/picnic_spot_res_model.dart';
 import 'package:gbk_tour/utils/app_text.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 
 typedef OnTap = VoidCallback;
 Widget picnicTile({
@@ -25,36 +27,53 @@ Widget picnicTile({
           SizedBox(
             height: context.getSize.height * 0.25,
             width: context.getSize.width,
-            child:image.isEmpty ? const SizedBox() : CarouselSlider.builder(
-                itemCount: image.length,
-                itemBuilder: (context, index1, index2) {
-                  PicnicPointImageModel model = image[index1];
-                  return model.image == null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.network(
-                            model.image!,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.network(
-                            Constant.serverUrl + model.image!,
-                            fit: BoxFit.cover,
-                          ),
+            child: image.isEmpty
+                ? const SizedBox()
+                : CarouselSlider.builder(
+                    itemCount: image.length,
+                    itemBuilder: (context, index1, index2) {
+                      PicnicPointImageModel model = image[index1];
+                      if (model.image == null) {
+                        return ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                model.image!,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                      } else {
+                        return TranslateAnimation(
+                          fromY: -context.getSize.height,
+                          child: Hero(
+                                    tag: 'hero${model.image}',
+                                    child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, Routes.zoom,
+                                        arguments:
+                                            model.image!);
+                                  },
+                                  child:  Image.network(
+                                      Constant.serverUrl + model.image!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
                         );
-                },
-                options: CarouselOptions(
-                  enlargeCenterPage: true,
-                  scrollPhysics: image.length == 1
-                      ? const NeverScrollableScrollPhysics()
-                      : const BouncingScrollPhysics(),
-                  autoPlay: image.length == 1 ? false : true,
-                  viewportFraction: image.length == 1 ? 1 : 0.8,
-                  // aspectRatio: 2.0,
-                  initialPage: 1,
-                )),
+                      }
+                    },
+                    options: CarouselOptions(
+                      enlargeCenterPage: true,
+                      scrollPhysics: image.length == 1
+                          ? const NeverScrollableScrollPhysics()
+                          : const BouncingScrollPhysics(),
+                      autoPlay: image.length == 1 ? false : true,
+                      viewportFraction: image.length == 1 ? 1 : 0.8,
+                      // aspectRatio: 2.0,
+                      initialPage: 1,
+                    )),
           ),
           context.heightBox(h: 0.005),
           Padding(
@@ -99,7 +118,6 @@ Widget picnicTile({
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
-                
               ],
             ),
           ),

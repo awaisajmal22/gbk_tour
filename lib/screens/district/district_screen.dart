@@ -16,7 +16,9 @@ import 'package:gbk_tour/data/models/province/province_res_model.dart';
 import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
 import 'package:gbk_tour/utils/progress_indicator.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
 import 'package:gbk_tour/utils/text_button.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 
 class DistrictScreen extends HookWidget {
   final ProvinceResModel model;
@@ -52,83 +54,95 @@ class DistrictScreen extends HookWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: appText(
-                          context: context,
-                          maxLines: 3,
-                          text:
-                              'Select the District of\n${model.province_name} ',
-                          fontSize: 25,
-                          fontWeight: FontWeight.w700,
+                        child: ScaleAnimation(
+                          child: appText(
+                            context: context,
+                            maxLines: 3,
+                            text:
+                                'Select the District of\n${model.province_name} ',
+                            fontSize: 25,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                       context.heightBox(h: 0.02),
                       if (state.getDistrics == null)
                         Expanded(
-                            child: Center(
-                          child: appText(
-                              context: context, text: 'No dirstic added yet.'),
-                        ))
+                          child: Center(
+                              child: ScaleAnimation(
+                            child: appText(
+                                context: context,
+                                text: 'No dirstic added yet.'),
+                          )),
+                        )
                       else
                         Expanded(
                           child: ListView.builder(
                               shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
                               itemCount: state.getDistrics!.length,
                               itemBuilder: (context, index) {
                                 final dataModel = state.getDistrics![index];
-                                return Column(
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 15),
-                                      child: GestureDetector(
-                                        onTap: () =>
-                                            selectDistrict(index, dataModel),
-                                        child: Container(
-                                          color: Colors.transparent,
-                                          width: context.getSize.width,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.all(4),
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color: ColorPalette.white,
-                                                      width: 2,
-                                                    )),
-                                                child: Container(
-                                                  height: 20,
-                                                  width: 20,
+                                return TranslateAnimation(
+                                  fromLeft: index.isEven ? true : false,
+                                  fromY: -context.getSize.height,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 15),
+                                        child: GestureDetector(
+                                          onTap: () =>
+                                              selectDistrict(index, dataModel),
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            width: context.getSize.width,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.all(4),
                                                   decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: _selectedDistric
-                                                                .value.id ==
-                                                            dataModel.id
-                                                        ? ColorPalette.white
-                                                        : ColorPalette
-                                                            .transparent,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color:
+                                                            ColorPalette.white,
+                                                        width: 2,
+                                                      )),
+                                                  child: Container(
+                                                    height: 20,
+                                                    width: 20,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: _selectedDistric
+                                                                  .value.id ==
+                                                              dataModel.id
+                                                          ? ColorPalette.white
+                                                          : ColorPalette
+                                                              .transparent,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              context.widthBox(w: 0.02),
-                                              appText(
-                                                  context: context,
-                                                  text:
-                                                      dataModel.district_name!)
-                                            ],
+                                                context.widthBox(w: 0.02),
+                                                appText(
+                                                    context: context,
+                                                    text: dataModel
+                                                        .district_name!)
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    if (state.getDistrics!.length - 1 == index)
-                                      context.heightBox(h: 0.08)
-                                  ],
+                                      if (state.getDistrics!.length - 1 ==
+                                          index)
+                                        context.heightBox(h: 0.08)
+                                    ],
+                                  ),
                                 );
                               }),
                         ),
@@ -138,21 +152,23 @@ class DistrictScreen extends HookWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
                     child: FittedBox(
-                      child: textButton(
-                          bgColor: _selectedIndex.value == -1
-                              ? ColorPalette.grey
-                              : Colors.black,
-                          context: context,
-                          title: 'NEXT',
-                          onTap: () {
-                            if (_selectedIndex.value != -1) {
-                              context
-                                  .read<PicnicSpotBloc>()
-                                  .add(LoadPicnicSpotEvent());
-                              Navigator.pushNamed(context, Routes.picnicspot,
-                                  arguments: _selectedDistric.value);
-                            }
-                          }),
+                      child: ScaleAnimation(
+                        child: textButton(
+                            bgColor: _selectedIndex.value == -1
+                                ? ColorPalette.grey
+                                : Colors.black,
+                            context: context,
+                            title: 'NEXT',
+                            onTap: () {
+                              if (_selectedIndex.value != -1) {
+                                context
+                                    .read<PicnicSpotBloc>()
+                                    .add(LoadPicnicSpotEvent());
+                                Navigator.pushNamed(context, Routes.picnicspot,
+                                    arguments: _selectedDistric.value);
+                              }
+                            }),
+                      ),
                     ),
                   )
                 ],

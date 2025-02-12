@@ -11,10 +11,12 @@ import 'package:gbk_tour/core/bloc/auth/auth_event.dart';
 import 'package:gbk_tour/core/bloc/auth/auth_state.dart';
 import 'package:gbk_tour/core/colors/color_palette.dart';
 import 'package:gbk_tour/gen/assets.gen.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
 
 import 'package:gbk_tour/utils/text_button.dart';
 import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 
 class OtpSuccessForm extends HookWidget {
   const OtpSuccessForm({super.key});
@@ -36,7 +38,7 @@ class OtpSuccessForm extends HookWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  Align(
+                 TranslateAnimation(child:   Align(
                     alignment: Alignment.topLeft,
                     child: GestureDetector(
                       onTap: () {
@@ -47,26 +49,26 @@ class OtpSuccessForm extends HookWidget {
                         color: ColorPalette.white,
                       ),
                     ),
-                  ),
-                  Assets.images.logo
-                      .image(height: context.getSize.height * 0.2),
-                  appText(
+                  ),),
+                 ScaleAnimation(child:   Assets.images.logo
+                      .image(height: context.getSize.height * 0.2),),
+                TranslateAnimation(child:    appText(
                     context: context,
                     text: "Password Reset",
                     align: TextAlign.left,
                     fontSize: 36,
                     fontWeight: FontWeight.w800,
-                  ),
+                  ),),
                   context.heightBox(h: 0.005),
-                  appText(
+               TranslateAnimation(child:     appText(
                     context: context,
                     align: TextAlign.left,
                     text:
                         'Your password has been successfully reset. click confirm to set a new password',
                     fontSize: 14,
-                  ),
+                  ),),
                   context.heightBox(h: 0.04),
-                  textButton(
+             ScaleAnimation(child:       textButton(
                     bgColor: ColorPalette.black,
                     context: context,
                     title: 'CONFIRM',
@@ -75,7 +77,7 @@ class OtpSuccessForm extends HookWidget {
                       context.read<AuthBloc>().add(AuthNavigationEvent(
                           index: 6, value: state.forgetValue));
                     },
-                  ),
+                  ),),
                   context.heightBox(h: 0.02),
                 ],
               ),

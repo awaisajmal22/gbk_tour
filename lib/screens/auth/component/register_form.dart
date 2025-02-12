@@ -10,6 +10,7 @@ import 'package:gbk_tour/core/bloc/auth/auth_bloc.dart';
 import 'package:gbk_tour/core/bloc/auth/auth_event.dart';
 import 'package:gbk_tour/core/bloc/auth/auth_state.dart';
 import 'package:gbk_tour/core/colors/color_palette.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
 
 import 'package:gbk_tour/utils/text_button.dart';
 
@@ -17,6 +18,7 @@ import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
 import 'package:gbk_tour/utils/text_field.dart';
 import 'package:gbk_tour/utils/toast.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../../gen/assets.gen.dart';
@@ -49,132 +51,158 @@ class ResgisterForm extends HookWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: GestureDetector(
-                      onTap: () {
-                        context.navigateAuth(1);
-                      },
-                      child: const Icon(
-                        Icons.arrow_back,
-                        color: ColorPalette.white,
+                  TranslateAnimation(
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: GestureDetector(
+                        onTap: () {
+                          context.navigateAuth(1);
+                        },
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: ColorPalette.white,
+                        ),
                       ),
                     ),
                   ),
-                  Assets.images.logo
-                      .image(height: context.getSize.height * 0.2),
-                  appText(
-                    context: context,
-                    text: "Create account",
-                    fontSize: 36,
-                    fontWeight: FontWeight.w800,
+                  ScaleAnimation(
+                    child: Assets.images.logo
+                        .image(height: context.getSize.height * 0.2),
+                  ),
+                  ScaleAnimation(
+                    child: appText(
+                      context: context,
+                      text: "Create account",
+                      fontSize: 36,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   context.heightBox(h: 0.008),
-                  textField(
-                    controller: _fullName,
-                    hintText: 'Enter your full name',
-                    context: context,
-                  ),
-                  context.heightBox(h: 0.01),
-                  textField(
-                    textInputType: TextInputType.number,
-                    controller: _phone,
-                    hintText: 'Enter Your Phone Number ',
-                    context: context,
-                  ),
-                  context.heightBox(h: 0.01),
-                  textField(
-                    controller: _email,
-                    hintText: 'Enter Your Email Address ',
-                    context: context,
-                  ),
-                  context.heightBox(h: 0.01),
-                  textField(
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        obsecure1.value = !obsecure1.value;
-                      },
-                      child: Icon(
-                        obsecure1.value
-                            ? CupertinoIcons.eye
-                            : CupertinoIcons.eye_slash,
-                      ),
+                  TranslateAnimation(
+                    child: textField(
+                      controller: _fullName,
+                      hintText: 'Enter your full name',
+                      context: context,
                     ),
-                    controller: _password,
-                    obsecure: obsecure1.value,
-                    hintText: 'Create Your Password',
-                    context: context,
                   ),
                   context.heightBox(h: 0.01),
-                  textField(
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        obsecure2.value = !obsecure2.value;
-                      },
-                      child: Icon(
-                        obsecure2.value
-                            ? CupertinoIcons.eye
-                            : CupertinoIcons.eye_slash,
-                      ),
+                  TranslateAnimation(
+                    fromLeft: false,
+                    child: textField(
+                      textInputType: TextInputType.number,
+                      controller: _phone,
+                      hintText: 'Enter Your Phone Number ',
+                      context: context,
                     ),
-                    controller: _confirmPassword,
-                    obsecure: obsecure2.value,
-                    hintText: 'Conform Your Password',
-                    context: context,
+                  ),
+                  context.heightBox(h: 0.01),
+                  TranslateAnimation(
+                    child: textField(
+                      controller: _email,
+                      hintText: 'Enter Your Email Address ',
+                      context: context,
+                    ),
+                  ),
+                  context.heightBox(h: 0.01),
+                  TranslateAnimation(
+                    fromLeft: false,
+                    child: textField(
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          obsecure1.value = !obsecure1.value;
+                        },
+                        child: Icon(
+                          obsecure1.value
+                              ? CupertinoIcons.eye
+                              : CupertinoIcons.eye_slash,
+                        ),
+                      ),
+                      controller: _password,
+                      obsecure: obsecure1.value,
+                      hintText: 'Create Your Password',
+                      context: context,
+                    ),
+                  ),
+                  context.heightBox(h: 0.01),
+                  TranslateAnimation(
+                    child: textField(
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          obsecure2.value = !obsecure2.value;
+                        },
+                        child: Icon(
+                          obsecure2.value
+                              ? CupertinoIcons.eye
+                              : CupertinoIcons.eye_slash,
+                        ),
+                      ),
+                      controller: _confirmPassword,
+                      obsecure: obsecure2.value,
+                      hintText: 'Conform Your Password',
+                      context: context,
+                    ),
                   ),
                   context.heightBox(h: 0.06),
-                  textButton(
-                    context: context,
-                    title: 'SIGN UP',
-                    onTap: () {
-                      if (_phone.text.isEmpty) {
-                        toast(
-                            msg: 'Please enter your phone number.',
-                            context: context);
-                      } else if (_email.text.isEmpty) {
-                        toast(
-                            msg: 'Please enter your email address.',
-                            context: context);
-                      } else if (!_email.text.isValidEmail()) {
-                        toast(
-                            msg: 'Please enter valid email address.',
-                            context: context);
-                      } else if (_password.text.isEmpty) {
-                        toast(
-                            msg: 'Please enter your password',
-                            context: context);
-                      } else if (_password.length < 6) {
-                        toast(msg: 'Password is too small.', context: context);
-                      } else if (_password.text != _confirmPassword.text) {
-                        toast(msg: 'Password not match.', context: context);
-                      } else {
-                        context.read<AuthBloc>().add(AuthRegisterEvent(
-                            context: context,
-                            email: _email.text.toLowerCase(),
-                            name: _fullName.text,
-                            password: _password.text,
-                            phone: _phone.text));
-                      }
-                    },
+                  ScaleAnimation(
+                    child: textButton(
+                      context: context,
+                      title: 'SIGN UP',
+                      onTap: () {
+                        if (_phone.text.isEmpty) {
+                          toast(
+                              msg: 'Please enter your phone number.',
+                              context: context);
+                        } else if (_email.text.isEmpty) {
+                          toast(
+                              msg: 'Please enter your email address.',
+                              context: context);
+                        } else if (!_email.text.isValidEmail()) {
+                          toast(
+                              msg: 'Please enter valid email address.',
+                              context: context);
+                        } else if (_password.text.isEmpty) {
+                          toast(
+                              msg: 'Please enter your password',
+                              context: context);
+                        } else if (_password.length < 6) {
+                          toast(
+                              msg: 'Password is too small.', context: context);
+                        } else if (_password.text != _confirmPassword.text) {
+                          toast(msg: 'Password not match.', context: context);
+                        } else {
+                          context.read<AuthBloc>().add(AuthRegisterEvent(
+                              context: context,
+                              email: _email.text.toLowerCase(),
+                              name: _fullName.text,
+                              password: _password.text,
+                              phone: _phone.text));
+                        }
+                      },
+                    ),
                   ),
                   context.heightBox(h: 0.02),
                   Row(
                     children: [
                       Expanded(
-                          child: Container(
-                        color: ColorPalette.white,
-                        height: 1,
-                      )),
+                        child: TranslateAnimation(
+                            child: Container(
+                          color: ColorPalette.white,
+                          height: 1,
+                        )),
+                      ),
                       context.widthBox(w: 0.03),
                       Expanded(
-                          child: Container(
-                        color: ColorPalette.white,
-                        height: 1,
-                      )),
-                      context.heightBox(h: 0.03),
+                        child: TranslateAnimation(
+                            fromLeft: false,
+                            child: Container(
+                              color: ColorPalette.white,
+                              height: 1,
+                            )),
+                      ),
                     ],
                   ),
-                  Row(
+                  TranslateAnimation(
+                      child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       appText(
@@ -199,7 +227,7 @@ class ResgisterForm extends HookWidget {
                         ),
                       )
                     ],
-                  )
+                  )),
                 ],
               ),
             ),

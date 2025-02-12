@@ -5,4 +5,5 @@ class Routes{
   static const distric ='/distric';
   static const picnicspot ='/picnicspot';
   static const hotels ='/hotels';
+  static const zoom ='/zoom';
 }

@@ -11,17 +11,17 @@ class DioHotelsRepository implements HotelsRepository {
   @override
   Future<List<HotelsResModel>> getHotels({
     required BuildContext context,
-    required int districtId,
+    required int picnicPointId,
     required String token,
   }) async {
     List<HotelsResModel> modelList = <HotelsResModel>[];
     try {
       final response = await API().getRequestHeader(
-          context, ApiUrl.hotels + districtId.toString(), token);
+          context, ApiUrl.hotels + picnicPointId.toString(), token);
       if (response.statusCode == 200) {
         final data = response.data;
         print("Data is $data");
-        data['data'].forEach((d) => modelList.add(HotelsResModel.fromJson(d)));
+        data['data']['hotels'].forEach((d) => modelList.add(HotelsResModel.fromJson(d)));
         print("Data Length ${modelList.length}");
       } else {}
     } catch (e) {}

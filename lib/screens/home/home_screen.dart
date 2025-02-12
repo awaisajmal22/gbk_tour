@@ -22,10 +22,12 @@ import 'package:gbk_tour/screens/home/component/home_drawer.dart';
 import 'package:gbk_tour/screens/home/component/home_tile.dart';
 import 'package:gbk_tour/utils/dialog/auth_error_dialog.dart';
 import 'package:gbk_tour/utils/loader/loading.dart';
+import 'package:gbk_tour/utils/scale_animation.dart';
 
 import 'package:gbk_tour/utils/text_button.dart';
 import 'package:gbk_tour/utils/app_text.dart';
 import 'package:gbk_tour/utils/background.dart';
+import 'package:gbk_tour/utils/translate_animation.dart';
 
 class HomeScreen extends HookWidget {
   HomeScreen({super.key});
@@ -110,13 +112,13 @@ class HomeScreen extends HookWidget {
                                         ),
                                       ),
                                       Expanded(
-                                        child: appText(
+                                        child: ScaleAnimation(child:  appText(
                                           context: context,
                                           text:
-                                              'Select the Provence whare you want to go..',
+                                              'Select the Province whare you want to go..',
                                           fontSize: 25,
                                           fontWeight: FontWeight.w700,
-                                        ),
+                                        ),),
                                       ),
                                     ]),
                                   ),
@@ -129,24 +131,28 @@ class HomeScreen extends HookWidget {
                                           padding: const EdgeInsets.only(
                                               left: 20, right: 20, bottom: 80),
                                           itemBuilder: (context, index) {
-                                            return homeTile(
-                                                color: _selectedIndex.value ==
-                                                        index
-                                                    ? ColorPalette.white
-                                                    : ColorPalette.transparent,
-                                                title: modelList[index]
-                                                    .province_name!,
-                                                description: index == 0
-                                                    ? Constant.kashmirDes
-                                                    : Constant.gilgitDes,
-                                                context: context,
-                                                onTap: () => onChange(
-                                                    index, modelList[index]),
-                                                image: index == 0
-                                                    ? Constant.kashmirImage(
-                                                        context)
-                                                    : Constant.gilgitImage(
-                                                        context));
+                                            return TranslateAnimation(
+                                               fromLeft: index.isEven ? true : false,
+                                              fromY: -context.getSize.height,
+                                              child: homeTile(
+                                                  color: _selectedIndex.value ==
+                                                          index
+                                                      ? ColorPalette.white
+                                                      : ColorPalette.transparent,
+                                                  title: modelList[index]
+                                                      .province_name!,
+                                                  description: index == 0
+                                                      ? Constant.kashmirDes
+                                                      : Constant.gilgitDes,
+                                                  context: context,
+                                                  onTap: () => onChange(
+                                                      index, modelList[index]),
+                                                  image: index == 0
+                                                      ? Constant.kashmirImage(
+                                                          context)
+                                                      : Constant.gilgitImage(
+                                                          context)),
+                                            );
                                           })),
                                 ],
                               ),
@@ -154,7 +160,7 @@ class HomeScreen extends HookWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 10),
                                 child: FittedBox(
-                                  child: textButton(
+                                  child:ScaleAnimation(child: textButton(
                                       bgColor: _selectedIndex.value == -1
                                           ? ColorPalette.grey
                                           : Colors.black,
@@ -173,7 +179,7 @@ class HomeScreen extends HookWidget {
                                               arguments:
                                                   _selectedProvince.value);
                                         }
-                                      }),
+                                      }),),
                                 ),
                               )
                             ],

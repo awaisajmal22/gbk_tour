@@ -9,6 +9,7 @@ import 'package:gbk_tour/screens/home/home_screen.dart';
 import 'package:gbk_tour/screens/hotels/hotels_screen.dart';
 import 'package:gbk_tour/screens/picnicspot/picnic_spot_screen.dart';
 import 'package:gbk_tour/screens/splash/splash_screen.dart';
+import 'package:gbk_tour/screens/zoomimage/zoom_image_screen.dart';
 
 class Pages {
   static Route<dynamic> onGeneratingRoute(RouteSettings settings) {
@@ -33,6 +34,11 @@ return PicnicSpotScreen(model: model);
      return MaterialPageRoute(builder: (context){
       var model = settings.arguments as PicnicSpotResModel;
       return HotelsScreen(model: model);
+     });
+     case Routes.zoom:
+     return MaterialPageRoute(builder: (context){
+String image = settings.arguments as String;
+return ZoomImageScreen(image: image);
      });
       default:
         return _ErroRoute();
